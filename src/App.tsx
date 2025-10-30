@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { Input } from './components/ui/input'
 import {
@@ -6,13 +6,10 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-import dados from '@/data/achadinhos.json'
 
 interface Achadinho {
   codigo: string;
@@ -21,8 +18,10 @@ interface Achadinho {
 }
 
 function App() {
-  const [achadinhos, setAchadinhos] = useState<Achadinho[]>(dados);
+  const [achadinhos, setAchadinhos] = useState<Achadinho[]>([]);
   const [resultados, setResultados] = useState<Achadinho[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.trim();
@@ -35,12 +34,47 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    // URL do seu arquivo JSON no GitHub
+    const url = 'https://raw.githubusercontent.com/felipefranzim/achadinhosbysis/main/src/data/achadinhos.json';
+
+    fetch(url)
+      .then(response => {
+        // Verifica se a resposta da rede foi bem-sucedida
+        if (!response.ok) {
+          throw new Error(`Erro HTTP! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Atualiza o estado com os dados recebidos
+        setAchadinhos(data); // Acessando a propriedade 'achadinhos' do JSON
+        setLoading(false);
+      })
+      .catch(error => {
+        // Captura e armazena qualquer erro que ocorrer na busca
+        console.error("Não foi possível buscar os dados:", error);
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
+
+  const MessageFeedback = () => {
+    if (error) {
+      return <p className='text-gray-200 mt-0.5'>😢 Ocorreu um erro ao carregar a lista de achadinhos</p>
+    } else if (loading) {
+      return <p className='text-gray-200 mt-0.5'>🔎 Carregando a lista de achadinhos...</p>
+    } else {
+      return <p className='text-gray-200 mt-0.5'>☝️ Digite o número do produto para ver os resultados</p>
+    }
+  }
+
   return (
     <>
       <div className="container">
         <div className='profile-image'></div>
         <p>Encontre seus achadinhos de forma rápida e prática ✨</p>
-        <Input placeholder='Pesquise pelo número do produto' onChange={handleSearch} className='mt-5' />
+        <Input placeholder='Pesquise pelo número do produto' onChange={handleSearch} className='mt-5' disabled={loading} />
 
         {
           resultados.length > 0 ? (
@@ -70,7 +104,7 @@ function App() {
               </TableBody>
             </Table>
           ) : (
-            <p className='text-gray-200 mt-0.5'>☝️ Digite o número do produto para ver os resultados</p>
+            <MessageFeedback />
           )
         }
       </div>
