@@ -82,7 +82,7 @@ function App() {
               <TableCaption>Lista de Achadinhos</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Número do Produto</TableHead>
+                  <TableHead>Número</TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Link</TableHead>
                 </TableRow>
