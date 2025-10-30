@@ -1,0 +1,22 @@
+[
+    {
+        "codigo": "0001",
+        "titulo": "Caneca Personalizada",
+        "link": "https://www.example.com/caneca-personalizada"
+    },
+    {
+        "codigo": "0002",
+        "titulo": "Camiseta Estampada",
+        "link": "https://www.example.com/camiseta-estampada"
+    },
+    {
+        "codigo": "0003",
+        "titulo": "Agenda 2024",
+        "link": "https://www.example.com/agenda-2024"
+    },
+    {
+        "codigo": "0004",
+        "titulo": "Fone de Ouvido Bluetooth",
+        "link": "https://www.example.com/fone-bluetooth"
+    }
+]
